@@ -4,87 +4,82 @@ import (
 	"context"
 
 	"fmt"
-	"time"
 
-	"github.com/Netflix-Clone-MicFlix/User-Service/internal/entity"
-	"github.com/Netflix-Clone-MicFlix/User-Service/pkg/mongodb"
-	"github.com/Netflix-Clone-MicFlix/User-Service/pkg/security"
+	"github.com/Netflix-Clone-MicFlix/Movie-Service/internal/entity"
+	"github.com/Netflix-Clone-MicFlix/Movie-Service/pkg/mongodb"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-const saltCollectionName = "salt"
+const genreCollectionName = "genre"
 
-// SaltRepo -.
-type SaltRepo struct {
+// GenreRepo -.
+type GenreRepo struct {
 	*mongodb.MongoDB
 }
 
 // New -.
-func NewSaltRepo(mdb *mongodb.MongoDB) *SaltRepo {
-	return &SaltRepo{mdb}
+func NewGenreRepo(mdb *mongodb.MongoDB) *GenreRepo {
+	return &GenreRepo{mdb}
 }
 
 // GetById -.
-func (sr *SaltRepo) GetById(ctx context.Context, user_id string) (entity.Salt, error) {
-	salt := entity.Salt{}
+func (sr *GenreRepo) GetById(ctx context.Context, genre_id string) (entity.Genre, error) {
+	genre := entity.Genre{}
 
-	var filter bson.M = bson.M{"userid": user_id}
-	err := sr.Database.Collection(saltCollectionName).FindOne(context.Background(), filter).Decode(&salt)
+	var filter bson.M = bson.M{"id": genre_id}
+	err := sr.Database.Collection(genreCollectionName).FindOne(context.Background(), filter).Decode(&genre)
 	if err != nil {
-		return entity.Salt{}, fmt.Errorf("SaltRepo - GetById - rows.Scan: %w", err)
+		return entity.Genre{}, fmt.Errorf("GenreRepo - GetById - rows.Scan: %w", err)
 	}
 
-	return salt, nil
+	return genre, nil
 }
 
 // Create -.
-func (sr *SaltRepo) Create(ctx context.Context, user_id string) ([]byte, error) {
+func (sr *GenreRepo) Create(ctx context.Context, genre_name string) error {
 
-	var rs = security.GenerateRandomSalt()
-	salt := entity.Salt{
-		SaltData:  rs,
-		CreatedAt: time.Now(),
-		UserId:    user_id,
+	guid := uuid.New().String()
+	genre := entity.Genre{
+		Id:   guid,
+		Name: genre_name,
 	}
-
-	_, err := sr.Database.Collection(saltCollectionName).InsertOne(context.Background(), salt)
+	_, err := sr.Database.Collection(genreCollectionName).InsertOne(context.Background(), genre)
 	if err != nil {
-		return nil, fmt.Errorf("SaltRepo - Create - rows.Scan: %w", err)
+		return fmt.Errorf("GenreRepo - Create - rows.Scan: %w", err)
 	}
-	return rs, nil
+	return nil
 }
 
 // Delete -.
-func (sr *SaltRepo) Delete(ctx context.Context, user_id string) error {
-	_, err := sr.Database.Collection(saltCollectionName).DeleteOne(
+func (sr *GenreRepo) Delete(ctx context.Context, genre_id string) error {
+	_, err := sr.Database.Collection(genreCollectionName).DeleteOne(
 		context.Background(),
-		bson.M{"user_id": user_id})
+		bson.M{"id": genre_id})
 
 	if err != nil {
-		return fmt.Errorf("SaltRepo - Delete - rows.Scan: %w", err)
+		return fmt.Errorf("GenreRepo - Delete - rows.Scan: %w", err)
 	}
 	return nil
 }
 
 // Update -.
-func (sr *SaltRepo) Update(ctx context.Context, user_id string) ([]byte, error) {
+func (sr *GenreRepo) Update(ctx context.Context, newGenre entity.Genre) error {
 
-	var rs = security.GenerateRandomSalt()
-	salt := entity.Salt{
-		SaltData:  rs,
-		CreatedAt: time.Now(),
-		UserId:    user_id,
+	genre := entity.Genre{
+		Id:   newGenre.Id,
+		Name: newGenre.Name,
 	}
 
-	update := bson.M{"$set": salt}
+	update := bson.M{"$set": genre}
 
-	_, err := sr.Database.Collection(saltCollectionName).UpdateOne(
+	_, err := sr.Database.Collection(genreCollectionName).UpdateOne(
 		context.Background(),
-		bson.M{"userid": user_id},
+		bson.M{"id": newGenre.Id},
 		update)
 
 	if err != nil {
-		return nil, fmt.Errorf("SaltRepo - Create - rows.Scan: %w", err)
+		fmt.Errorf("GenreRepo - Create - rows.Scan: %w", err)
 	}
-	return rs, nil
+	return nil
 }

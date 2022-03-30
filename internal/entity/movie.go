@@ -4,14 +4,13 @@ package entity
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Translation -.
 type Movie struct {
-	Id          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Title       string             `json:"name"         example:"spongebob the movie"`
-	description string             `json:"name"         example:"spongebob the movie"`
-	CreatedAt   time.Time          `json:"created_at"   example:"2022-02-17 13:39:03.809450"`
+	Id          string    `json:"id"    example:"6be244a7-25ac-34ce-31e3-04157d3d42e3"`
+	Title       string    `json:"name"         example:"spongebob the movie"`
+	Description string    `json:"description"         example:"spongebob the movie"`
+	Genres      []string  `json:"genre_ids"              example:"horror = 1"`
+	CreatedAt   time.Time `json:"created_at"   example:"2022-02-17 13:39:03.809450"`
 }

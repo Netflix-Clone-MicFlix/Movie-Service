@@ -25,7 +25,7 @@ func Run(cfg *config.Config) {
 	l := logger.New(cfg.Log.Level)
 
 	// Repository mongodb
-	mdb, err := mongodb.New(cfg.MDB.Moviename, cfg.MDB.Password, cfg.MDB.Cluster, cfg.MDB.Database)
+	mdb, err := mongodb.New(cfg.MDB.Username, cfg.MDB.Password, cfg.MDB.Cluster, cfg.MDB.Database)
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
@@ -33,7 +33,7 @@ func Run(cfg *config.Config) {
 	// Use case
 	userUseCase := services.NewMovieUseCase(
 		repositories.NewMovieRepo(mdb),
-		repositories.NewSaltRepo(mdb),
+		repositories.NewGenreRepo(mdb),
 		nil,
 	)
 

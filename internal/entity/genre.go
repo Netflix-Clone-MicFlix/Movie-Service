@@ -2,12 +2,8 @@
 // HTTP response objects if suitable. Each logic group entities in own file.
 package entity
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 // Translation -.
 type Genre struct {
-	Id   primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Name string             `json:"name"         example:"spongebob the movie"`
+	Id   string `json:"id"    example:"6be244a7-25ac-34ce-31e3-04157d3d42e3"`
+	Name string `json:"name"  example:"spongebob the movie"`
 }

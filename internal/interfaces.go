@@ -20,17 +20,17 @@ type (
 	MovieRepo interface {
 		GetAll(context.Context) ([]entity.Movie, error)
 		GetById(context.Context, string) (entity.Movie, error)
-		Create(context.Context, entity.Movie, []byte) error
-		Update(context.Context, string, entity.Movie, []byte) error
+		Create(context.Context, entity.Movie) error
+		Update(context.Context, string, entity.Movie) error
 		Delete(context.Context, string) error
 	}
 
-	// SaltRepo -.
-	SaltRepo interface {
-		GetById(context.Context, string) (entity.Salt, error)
-		Create(context.Context, string) ([]byte, error)
+	// GenreRepo -.
+	GenreRepo interface {
+		GetById(context.Context, string) (entity.Genre, error)
+		Create(context.Context, string) error
 		Delete(context.Context, string) error
-		Update(context.Context, string) ([]byte, error)
+		Update(context.Context, entity.Genre) error
 	}
 	// MovieWebAPI -.
 	WebAPI interface {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/Netflix-Clone-MicFlix/Movie-Service/internal/entity"
 	"github.com/Netflix-Clone-MicFlix/Movie-Service/pkg/mongodb"
-	"github.com/Netflix-Clone-MicFlix/Movie-Service/pkg/security"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -46,7 +46,7 @@ func (ur *MovieRepo) GetAll(ctx context.Context) ([]entity.Movie, error) {
 func (ur *MovieRepo) GetById(ctx context.Context, movie_id string) (entity.Movie, error) {
 	movie := entity.Movie{}
 
-	var filter bson.M = bson.M{"_id": movie_id}
+	var filter bson.M = bson.M{"id": movie_id}
 	curr, err := ur.Database.Collection(movieCollectionName).Find(context.Background(), filter)
 	if err != nil {
 		return entity.Movie{}, fmt.Errorf("MovieRepo - GetById - rows.Scan: %w", err)
@@ -59,10 +59,10 @@ func (ur *MovieRepo) GetById(ctx context.Context, movie_id string) (entity.Movie
 }
 
 // Create -.
-func (ur *MovieRepo) Create(ctx context.Context, movie entity.Movie, salt []byte) error {
-	var hashedPassword = security.HashPassword(movie.Password, salt)
+func (ur *MovieRepo) Create(ctx context.Context, movie entity.Movie) error {
+	guid := uuid.New().String()
+	movie.Id = guid
 
-	movie.Password = hashedPassword
 	_, err := ur.Database.Collection(movieCollectionName).InsertOne(context.Background(), movie)
 	if err != nil {
 		return fmt.Errorf("MovieRepo - Create - rows.Scan: %w", err)
@@ -71,12 +71,9 @@ func (ur *MovieRepo) Create(ctx context.Context, movie entity.Movie, salt []byte
 }
 
 // Update -.
-func (ur *MovieRepo) Update(ctx context.Context, movie_id string, movie entity.Movie, salt []byte) error {
+func (ur *MovieRepo) Update(ctx context.Context, movie_id string, movie entity.Movie) error {
 
-	var hashedPassword = security.HashPassword(movie.Password, salt)
-	movie.Password = hashedPassword
 	movie.Id = movie_id
-
 	update := bson.M{"$set": movie}
 
 	_, err := ur.Database.Collection(movieCollectionName).UpdateOne(
@@ -94,23 +91,10 @@ func (ur *MovieRepo) Update(ctx context.Context, movie_id string, movie entity.M
 func (ur *MovieRepo) Delete(ctx context.Context, movie_id string) error {
 	_, err := ur.Database.Collection(movieCollectionName).DeleteOne(
 		context.Background(),
-		bson.M{"_id": movie_id})
+		bson.M{"id": movie_id})
 
 	if err != nil {
 		return fmt.Errorf("MovieRepo - Delete - rows.Scan: %w", err)
 	}
 	return nil
-}
-
-// Login -.
-func (ur *MovieRepo) Login(ctx context.Context, movie entity.Movie) (entity.Movie, error) {
-	moviedb := entity.Movie{}
-
-	var filter bson.M = bson.M{"email": movie.Email}
-	err := ur.Database.Collection(movieCollectionName).FindOne(context.Background(), filter).Decode(&moviedb)
-	if err != nil {
-		return entity.Movie{}, fmt.Errorf("MovieRepo - Login - rows.Scan: %w", err)
-	}
-
-	return moviedb, nil
 }
