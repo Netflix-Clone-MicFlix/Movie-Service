@@ -4,6 +4,7 @@
 
 # Config
 .env
+config/config.yml
 
 # Binaries for programs and plugins
 *.exe
@@ -11,6 +12,7 @@
 *.dll
 *.so
 *.dylib
+docker-compose.yml
 
 # Test binary, built with `go test -c`
 *.test

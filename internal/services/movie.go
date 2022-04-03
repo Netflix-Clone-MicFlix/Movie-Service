@@ -53,9 +53,14 @@ func (uc *MovieUseCase) Create(ctx context.Context, title string, discription st
 		Description: discription,
 		Genres:      []string{},
 	}
+
+	if data.Title == "" || data.Description == "" {
+		return fmt.Errorf("MovieUseCase - Create - s.movieRepo.Store: No values provided")
+	}
+
 	err := uc.movieRepo.Create(context.Background(), data)
 	if err != nil {
-		fmt.Errorf("MovieUseCase - GetAll - s.movieRepo.Store: %w", err)
+		return fmt.Errorf("MovieUseCase - Create - s.movieRepo.Store: %w", err)
 	}
 
 	return nil
