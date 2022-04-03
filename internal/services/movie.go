@@ -44,3 +44,19 @@ func (uc *MovieUseCase) GetAll(ctx context.Context) ([]entity.Movie, error) {
 
 	return movies, nil
 }
+
+// Create - gets alls-.
+func (uc *MovieUseCase) Create(ctx context.Context, title string, discription string) error {
+
+	data := entity.Movie{
+		Title:       title,
+		Description: discription,
+		Genres:      []string{},
+	}
+	err := uc.movieRepo.Create(context.Background(), data)
+	if err != nil {
+		fmt.Errorf("MovieUseCase - GetAll - s.movieRepo.Store: %w", err)
+	}
+
+	return nil
+}

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"fmt"
 
@@ -62,6 +63,7 @@ func (ur *MovieRepo) GetById(ctx context.Context, movie_id string) (entity.Movie
 func (ur *MovieRepo) Create(ctx context.Context, movie entity.Movie) error {
 	guid := uuid.New().String()
 	movie.Id = guid
+	movie.CreatedAt = time.Now()
 
 	_, err := ur.Database.Collection(movieCollectionName).InsertOne(context.Background(), movie)
 	if err != nil {

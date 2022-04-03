@@ -21,6 +21,7 @@ func newMovieRoutes(handler *gin.RouterGroup, t internal.Movie, l logger.Interfa
 	h := handler.Group("/movie")
 	{
 		h.GET("", r.GetAll)
+		h.POST("", r.Create)
 		h.GET("/:movie_id", r.GetById)
 
 	}
@@ -31,6 +32,10 @@ type movieCollectionResponse struct {
 }
 type MovieRequest struct {
 	Movie entity.Movie `json:"movies"`
+}
+type CreateMovieRequest struct {
+	Title       string `json:"title"`
+	Discription string `json:"discription"`
 }
 
 // @Summary     Show movies
@@ -75,4 +80,34 @@ func (r *MovieRoutes) GetById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, movie)
+}
+
+// @Summary     creates movie
+// @Description creates movie with discription and title
+// @ID          movie
+// @Tags  	    movie
+// @Accept      json
+// @Produce     json
+// @Success     200 {object} CreateMovieRequest
+// @Failure     500 {object} response
+// @Router      /movie [get]
+func (r *MovieRoutes) Create(c *gin.Context) {
+	var request CreateMovieRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		r.l.Error(err, "http - v1 - Register user")
+		errorResponse(c, http.StatusBadRequest, "invalid request body")
+
+		return
+	}
+
+	err := r.t.Create(c.Request.Context(), request.Title, request.Discription)
+	if err != nil {
+		r.l.Error(err, "http - v1 - doMovie")
+		errorResponse(c, http.StatusInternalServerError, "movie service problems")
+
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }

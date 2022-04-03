@@ -14,6 +14,7 @@ type (
 	Movie interface {
 		GetById(context.Context, string) (entity.Movie, error)
 		GetAll(context.Context) ([]entity.Movie, error)
+		Create(context.Context, string, string) error
 	}
 
 	// MovieRepo -.
