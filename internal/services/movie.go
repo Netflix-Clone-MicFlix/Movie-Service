@@ -45,7 +45,7 @@ func (uc *MovieUseCase) GetAll(ctx context.Context) ([]entity.Movie, error) {
 	return movies, nil
 }
 
-// Create - gets alls-.
+// Create - Create genre-.
 func (uc *MovieUseCase) Create(ctx context.Context, title string, discription string) error {
 
 	data := entity.Movie{
@@ -64,4 +64,40 @@ func (uc *MovieUseCase) Create(ctx context.Context, title string, discription st
 	}
 
 	return nil
+}
+
+// Create - gets alls-.
+func (uc *MovieUseCase) AddGenre(ctx context.Context, name string) error {
+
+	if name == "" {
+		return fmt.Errorf("MovieUseCase - Create - s.movieRepo.Store: No values provided")
+	}
+
+	err := uc.genreRepo.Create(context.Background(), name)
+	if err != nil {
+		return fmt.Errorf("MovieUseCase - Create - s.movieRepo.Store: %w", err)
+	}
+
+	return nil
+}
+
+// GetById - gets all movie by ID -.
+func (uc *MovieUseCase) GetGenreById(ctx context.Context, genre_id string) (entity.Genre, error) {
+	genre, err := uc.genreRepo.GetById(ctx, genre_id)
+	if err != nil {
+		return entity.Genre{}, fmt.Errorf("MovieUseCase - GetById - s.movieRepo.GetHistory: %w", err)
+	}
+
+	return genre, nil
+}
+
+// GetAll - gets alls-.
+func (uc *MovieUseCase) GetAllGenre(ctx context.Context) ([]entity.Genre, error) {
+
+	genres, err := uc.genreRepo.GetAll(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("MovieUseCase - GetAll - s.movieRepo.Store: %w", err)
+	}
+
+	return genres, nil
 }

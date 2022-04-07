@@ -7,6 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"net/http"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/Netflix-Clone-MicFlix/Movie-Service/config"
@@ -47,7 +50,17 @@ func Run(cfg *config.Config) {
 
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, l, userUseCase)
+
+	corsConfig := cors.New(cors.Config{
+		AllowOrigins:     cfg.HTTP.AllowedOrigins,
+		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodHead, http.MethodDelete, http.MethodOptions},
+		AllowHeaders:     []string{"Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	})
+	handler.Use(corsConfig)
+
+	v1.NewRouter(handler, l, userUseCase, corsConfig)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
 	// Waiting signal

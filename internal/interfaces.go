@@ -15,6 +15,10 @@ type (
 		GetById(context.Context, string) (entity.Movie, error)
 		GetAll(context.Context) ([]entity.Movie, error)
 		Create(context.Context, string, string) error
+
+		GetGenreById(context.Context, string) (entity.Genre, error)
+		GetAllGenre(context.Context) ([]entity.Genre, error)
+		AddGenre(context.Context, string) error
 	}
 
 	// MovieRepo -.
@@ -28,6 +32,7 @@ type (
 
 	// GenreRepo -.
 	GenreRepo interface {
+		GetAll(context.Context) ([]entity.Genre, error)
 		GetById(context.Context, string) (entity.Genre, error)
 		Create(context.Context, string) error
 		Delete(context.Context, string) error

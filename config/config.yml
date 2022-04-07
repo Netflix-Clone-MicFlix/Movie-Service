@@ -4,6 +4,12 @@ app:
 
 http:
   port: '9000'
+  allowed-origins:
+    - 'http://localhost:4200'
+    - 'https://micflix-platform.krekels-server.com'
+    - 'https://micflix-data.krekels-server.com'
+
+  
 
 logger:
   log_level: 'debug'

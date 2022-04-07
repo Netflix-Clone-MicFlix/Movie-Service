@@ -23,6 +23,25 @@ func NewGenreRepo(mdb *mongodb.MongoDB) *GenreRepo {
 	return &GenreRepo{mdb}
 }
 
+// GetAll -.
+func (ur *GenreRepo) GetAll(ctx context.Context) ([]entity.Genre, error) {
+
+	genres := []entity.Genre{}
+
+	collection := ur.Database.Collection(genreCollectionName)
+
+	var filter bson.M = bson.M{}
+	curr, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		return nil, fmt.Errorf("GenreRepo - GetAll - rows.Scan: %w", err)
+	}
+	if err = curr.All(context.Background(), &genres); err != nil {
+		return nil, fmt.Errorf("GenreRepo - GetAll - rows.Scan: %w", err)
+	}
+
+	return genres, nil
+}
+
 // GetById -.
 func (sr *GenreRepo) GetById(ctx context.Context, genre_id string) (entity.Genre, error) {
 	genre := entity.Genre{}

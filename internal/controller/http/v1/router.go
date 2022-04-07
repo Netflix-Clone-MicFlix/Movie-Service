@@ -22,7 +22,7 @@ import (
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /v1
-func NewRouter(handler *gin.Engine, l logger.Interface, t internal.Movie) {
+func NewRouter(handler *gin.Engine, l logger.Interface, t internal.Movie, corsConfig gin.HandlerFunc) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -40,6 +40,6 @@ func NewRouter(handler *gin.Engine, l logger.Interface, t internal.Movie) {
 	// Routers
 	h := handler.Group("/v1")
 	{
-		newMovieRoutes(h, t, l)
+		newMovieRoutes(h, t, l, corsConfig)
 	}
 }
