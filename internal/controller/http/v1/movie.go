@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Netflix-Clone-MicFlix/Movie-Service/internal"
-	"github.com/Netflix-Clone-MicFlix/Movie-Service/internal/entity"
 	"github.com/Netflix-Clone-MicFlix/Movie-Service/pkg/logger"
 )
 
@@ -36,16 +35,9 @@ func newMovieRoutes(handler *gin.RouterGroup, t internal.Movie, l logger.Interfa
 
 }
 
-type movieCollectionResponse struct {
-	Movies []entity.Movie `json:"movies"`
-}
 type CreateMovieRequest struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
-}
-
-type GenreCollectionResponse struct {
-	Genre []entity.Genre `json:"genre"`
 }
 
 type GenreRequest struct {
@@ -71,7 +63,7 @@ func (r *MovieRoutes) GetAll(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, movieCollectionResponse{movies})
+	c.JSON(http.StatusOK, movies)
 }
 
 // @Summary     Show movie with id
@@ -175,7 +167,7 @@ func (r *MovieRoutes) GetAllGenre(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, GenreCollectionResponse{genres})
+	c.JSON(http.StatusOK, genres)
 }
 
 // @Summary     Show genre with id
