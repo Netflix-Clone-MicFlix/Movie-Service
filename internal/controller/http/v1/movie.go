@@ -20,13 +20,13 @@ func newMovieRoutes(handler *gin.RouterGroup, t internal.Movie, l logger.Interfa
 
 	movie := handler.Group("/movie")
 	{
-		movie.Use(corsConfig)
+		// movie.Use(corsConfig)
 		movie.GET("", r.GetAll)
 		movie.POST("", r.Create)
 		movie.GET("/:movie_id", r.GetById)
 		genres := movie.Group("/genre")
 		{
-			genres.Use(corsConfig)
+			// genres.Use(corsConfig)
 			genres.POST("", r.AddGenre)
 			genres.GET("", r.GetAllGenre)
 			genres.GET("/:genre_id", r.GetGenreById)
