@@ -14,9 +14,9 @@ require (
 	github.com/prometheus/client_golang v1.12.1
 	github.com/rs/zerolog v1.26.1
 	github.com/streadway/amqp v1.0.0
-	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
-	github.com/swaggo/gin-swagger v1.3.3
-	github.com/swaggo/swag v1.8.0
+	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe
+	github.com/swaggo/gin-swagger v1.5.0
+	github.com/swaggo/swag v1.8.1
 	go.mongodb.org/mongo-driver v1.8.4
 )
 
@@ -74,7 +74,7 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e // indirect
-	golang.org/x/net v0.0.0-20211013171255-e13a2654a71e // indirect
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
